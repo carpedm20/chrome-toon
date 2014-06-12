@@ -1,5 +1,7 @@
 'use strict';
 
+var storage = chrome.storage.local;
+
 var webtoonApp = angular.module('webtoonApp', ['ngRoute']);
 
 var nBase = "http://comic.naver.com";
@@ -32,6 +34,18 @@ webtoonApp.config(function($routeProvider) {
 webtoonApp.controller('webtoonController', function($scope, $http) {
   /* Webtoon parser */
   $scope.nList = {};
+  $scope.subscribeData = {}
+
+  $scope.changeSubscription = function (id) {
+    $scope.subscribeData[id] = !$scope.subscribeData[id];
+    alert($scope.subscribeData['119874']);
+    
+    storage.set({'subscribeData': $scope.subscribeData}, function() {
+      if (chrome.extension.lastError) {
+        alert('An error occurred: ' + chrome.extension.lastError.message);
+      }
+    });
+  }
 
   $http.get(nURL).success(function(data) {
     $(data).find('.thumb a').each(function(){
@@ -46,10 +60,16 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
           'thumbUrl': img.attr('src'),
           'days': [ enToKoDay(day) ],
           'title': img.attr('alt'),
-          'subscribe': false,
         };
       }
-    }); 
+
+      $scope.subscribeData[id] = false;
+    });
+
+    storage.get('subscribeData', function (obj) {
+      alert(obj['119874']);
+      $scope.subscribeData = obj;
+    });
 
     for (var day in enDay) {
       $http.get(nmURL + enDay[day]).success(function(data) {
