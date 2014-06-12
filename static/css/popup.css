@@ -1,0 +1,205 @@
+/* General */
+
+html {
+	overflow-y: hidden;
+}
+
+body {
+	min-height: 413px;
+	font-family: 'Nanum Gothic', Arial, sans-serif;
+}
+
+input {
+	font-family: 'Nanum Gothic', Arial, sans-serif !important;
+}
+
+#main-container {
+	width: 220px;
+	font-size: 12px;
+}
+
+#main-webtoon {
+
+}
+
+/* Flat-UI fix */
+.select {
+	margin-bottom: 0px !important;
+}
+.dropdown-arrow {
+	margin-top: 12px !important;
+}
+
+.btn-primary {
+	background: #009999 !important;
+}
+
+.icons, .checkbox {
+	display: inline !important;
+	font-size: 13px !important;
+	padding-left: 18px !important;
+}
+
+.school-to-box {
+	margin-left:15px !important;
+}
+
+.form-control {
+	font-size: 12px !important;
+	height: 36px !important;
+}
+
+/* Bootstrap Fix */
+
+.list-group {
+	margin-bottom: 0px !important;
+}
+
+.list-group-item {
+	padding: 5px 15px !important;
+}
+/* webtoon */
+
+#toon-search {
+	margin-bottom: 0px;
+	padding: 4px 5px;
+}
+
+#toon-filter {
+	margin-bottom: 2px;
+}
+
+.naver {
+	background: #00d700;
+}
+
+.toon-pub {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	height:100%;
+	width: 10px;
+	color: white;
+	font-weight: bold;
+}
+
+.toon-div {
+	
+}
+
+.toon-thumb-link {
+	margin-top: 4px;
+	margin-right: 5px;
+}
+
+.toon-thumb {
+	width: 50px;
+	height: auto;
+}
+
+.toon-info {
+	line-height: 15px;
+}
+
+p.webtoon-tag {
+	margin: 10px 0px 0px 0px;
+	font-size: 4px;
+	line-height: 0;
+}
+
+.star {
+	margin-bottom: 4px;
+}
+
+.star-text {
+	color: #777777;
+	font-weight: bold;
+	margin-right: 5px;
+	line-height: 15px !important;
+}
+
+.toon-btn {
+	font-size: 8px;
+}
+
+.tag {
+	border-radius: 4px;
+	background-color: #5dade2;
+	color: #ffffff;
+	font-size: 10px;
+	cursor: pointer;
+	display: inline-block;
+	margin-right: 5px;
+	overflow: hidden;
+	line-height: 15px;
+	padding: 2px 4px 2px 4px;
+	position: relative;
+	vertical-align: middle;
+	-webkit-transition: 0.25s linear;
+	transition: 0.25s linear;
+}
+
+.webtoon-div {
+	overflow: auto;
+	min-height: 20px; 
+}
+
+.webtoon-header {
+	position: absolute;
+	top: 0px;
+}
+
+.webtoon-time {
+}
+
+.webtoon-time-div {
+	position: relative;
+}
+
+.webtoon-text {
+	display: block;
+	font-size: 13px;
+}
+
+p.webtoon-text span, {
+	color: #bdc3c7;
+}
+
+.footer {
+	margin-top: 8px;
+	line-height: 13px;
+}
+
+.footer span {
+	font-size: 13px;
+}
+
+.footer-webtoon {
+	margin-right: 10px;
+}
+
+.carpedm20 {
+	font-size: 4px;
+	margin-bottom: 0px;
+	color: #bdc3c7;
+	margin-right: 10px;
+}
+
+.webtoon-text-label {
+	display: block;
+	position: absolute;
+	top: 4px;
+	font-size: 13px;
+	line-height: 13px;
+	color: #c0c1c2;
+	font-weight: 400;
+}
+
+.webtoon-table {
+	margin-bottom: 5px;
+}
+
+.webtoon-table .btn {
+	padding: 5px 10px !important;
+}
