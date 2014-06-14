@@ -1,8 +1,24 @@
 'use strict';
 
 var storage = chrome.storage.local;
-
 var webtoonApp = angular.module('webtoonApp', ['ngRoute']);
+
+chrome.notifications.clear(
+  'n1223ion',
+function() {} 
+);
+
+chrome.notifications.create(
+  'n1223ion',
+  {   
+    type: 'image', 
+    iconUrl: 'http://thumb.comic.naver.net/webtoon/183559/thumbnail/title_thumbnail_20121228220750_t83x90.jpg',
+    title: "This is a notification", 
+    message: "hello there!" 
+  },
+  function() {} 
+);
+
 
 var nBase = "http://comic.naver.com";
 var nmBase = "http://m.comic.naver.com"
@@ -38,11 +54,16 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
 
   $scope.changeSubscription = function (id) {
     $scope.subscribeData[id] = !$scope.subscribeData[id];
-    alert($scope.subscribeData['119874']);
+    //alert($scope.subscribeData['119874']);
     
     storage.set({'subscribeData': $scope.subscribeData}, function() {
+      storage.set({id: img.attr('src')}, function() {
+        if (chrome.extension.lastError) {
+          //alert('An error occurred: ' + chrome.extension.lastError.message);
+        }
+      });
       if (chrome.extension.lastError) {
-        alert('An error occurred: ' + chrome.extension.lastError.message);
+        //alert('An error occurred: ' + chrome.extension.lastError.message);
       }
     });
   }
@@ -60,15 +81,16 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
           'thumbUrl': img.attr('src'),
           'days': [ enToKoDay(day) ],
           'title': img.attr('alt'),
+          'pub': 'naver',
         };
       }
 
-      $scope.subscribeData[id] = false;
+      //$scope.subscribeData[id] = false;
     });
 
     storage.get('subscribeData', function (obj) {
-      alert(obj['119874']);
-      $scope.subscribeData = obj;
+      if (typeof obj['subscribeData'] != 'undefined')
+        $scope.subscribeData = obj['subscribeData'];
     });
 
     for (var day in enDay) {
@@ -85,19 +107,25 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
             alert("Error");
           }
 
-          $('#star-'+id).raty(
+          /*$('#star-'+id).raty(
             { path: '/static/img',
               readOnly: true,
               score: function() {
                 return $(this).attr('score')/2;
               }
-            });
+            });*/
         });
+      }).then(function(){
+        $('.raty').raty(
+          { path: '/static/img',
+            readOnly: true,
+            score: function() {
+              return $(this).attr('score')/2;
+            }
+          });
       });
     }
-
   });
-
 
   /*$http.get('/webtoones/webtoon_stops.json').success(function(data) {
     $scope.webtoonStops = data;
@@ -107,7 +135,6 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
   $http.get('/webtoones/webtoones.json').success(function(data) {
     $scope.webtoones = data;
   });*/
-
 });
 
 webtoonApp.directive('webtoonMenu', function() {

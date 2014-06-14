@@ -1,15 +1,18 @@
 {
   "background": {
-    "page": "html/background.html"
+    "scripts": ["/static/js/background.js"]
   },
   "browser_action": {
-    "default_icon": "static/img/icon48_active.png",
-    "default_popup": "html/popup.html"
+    "default_icon": "/static/img/icon48_active.png",
+    "default_popup": "/html/popup.html"
   },
   "permissions": [
+    "tabs",
     "storage",
+    "notifications",
     "http://comic.naver.com/",
-    "http://m.comic.naver.com/"
+    "http://m.comic.naver.com/",
+    "http://thumb.comic.naver.net/"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval' http://localhost; object-src 'self'",
   "default_locale": "en",
