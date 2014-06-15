@@ -1,10 +1,10 @@
 /* General */
 
 html {
-	overflow-y: hidden;
+	overflow-x: auto;
 }
-
 body {
+	overflow: auto !important;
 	min-height: 413px;
 	font-family: 'Nanum Gothic', Arial, sans-serif;
 }
@@ -19,7 +19,7 @@ input {
 }
 
 #main-webtoon {
-
+	margin-bottom: 37px;
 }
 
 /* Flat-UI fix */
@@ -57,7 +57,14 @@ input {
 
 .list-group-item {
 	padding: 5px 15px !important;
+	overflow: hidden !important;
+	width: 100% !important;
 }
+
+.media, .media-body {
+	overflow: initial !important;
+}
+
 /* webtoon */
 
 #toon-search {
@@ -85,12 +92,13 @@ input {
 }
 
 .toon-div {
-	
+	min-height: 60px;
 }
 
 .toon-thumb-link {
 	margin-top: 4px;
 	margin-right: 5px;
+	min-width: 50px;
 }
 
 .toon-thumb {
@@ -110,6 +118,7 @@ p.webtoon-tag {
 
 .star {
 	margin-bottom: 4px;
+	min-height: 14px;
 }
 
 .star-text {
@@ -138,6 +147,18 @@ p.webtoon-tag {
 	vertical-align: middle;
 	-webkit-transition: 0.25s linear;
 	transition: 0.25s linear;
+	margin-bottom: 3px;
+}
+
+#spinner {
+	min-height: 478px;
+	width: 100%;
+}
+
+#spinner-img {
+	position: absolute;
+	top: 48%;
+	left: 42%;
 }
 
 .webtoon-div {
@@ -162,13 +183,23 @@ p.webtoon-tag {
 	font-size: 13px;
 }
 
+.gray {
+	color: #777777;
+}
+
 p.webtoon-text span, {
 	color: #bdc3c7;
 }
 
 .footer {
-	margin-top: 8px;
 	line-height: 13px;
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	background: #007777;
+	padding-top: 7px;
+	color: white;
 }
 
 .footer span {
