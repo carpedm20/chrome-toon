@@ -3,27 +3,12 @@
 var storage = chrome.storage.local;
 var webtoonApp = angular.module('webtoonApp', ['ngRoute']);
 
-chrome.notifications.clear(
-  'n1223ion',
-function() {} 
-);
-
-chrome.notifications.create(
-  'n1223ion',
-  {   
-    type: 'image', 
-    iconUrl: 'http://thumb.comic.naver.net/webtoon/183559/thumbnail/title_thumbnail_20121228220750_t83x90.jpg',
-    title: "This is a notification", 
-    message: "hello there!" 
-  },
-  function() {} 
-);
-
-
 var nBase = "http://comic.naver.com";
 var nmBase = "http://m.comic.naver.com"
-var nURL = nBase + "/webtoon/weekday.nhn";
-var nmURL = nmBase + "/webtoon/weekday.nhn?week=";
+var nURL = nBase + "/webtoon/weekday.nhn"; // http://comic.naver.com/webtoon/weekday.nhn
+var nmURL = nmBase + "/webtoon/weekday.nhn?week="; // http://m.comic.naver.com/webtoon/weekday.nhn?week=mon
+
+var nComicUrl = nBase + "/webtoon/detail.nhn?titleId=";
 
 var isParsedComplete = false;
 
@@ -50,18 +35,11 @@ webtoonApp.config(function($routeProvider) {
 webtoonApp.controller('webtoonController', function($scope, $http) {
   /* Webtoon parser */
   $scope.nList = {};
-  $scope.subscribeData = {}
 
   $scope.changeSubscription = function (id) {
-    $scope.subscribeData[id] = !$scope.subscribeData[id];
-    //alert($scope.subscribeData['119874']);
+    $scope.nList[id]['subscribe'] = !$scope.nList[id]['subscribe'];
     
-    storage.set({'subscribeData': $scope.subscribeData}, function() {
-      storage.set({id: img.attr('src')}, function() {
-        if (chrome.extension.lastError) {
-          //alert('An error occurred: ' + chrome.extension.lastError.message);
-        }
-      });
+    storage.set({'nList': $scope.nList}, function() {
       if (chrome.extension.lastError) {
         //alert('An error occurred: ' + chrome.extension.lastError.message);
       }
@@ -82,15 +60,14 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
           'days': [ enToKoDay(day) ],
           'title': img.attr('alt'),
           'pub': 'naver',
+          'subscribe': false
         };
       }
-
-      //$scope.subscribeData[id] = false;
     });
 
-    storage.get('subscribeData', function (obj) {
-      if (typeof obj['subscribeData'] != 'undefined')
-        $scope.subscribeData = obj['subscribeData'];
+    storage.get('nList', function (obj) {
+      if (typeof obj['nList'] != 'undefined')
+        $scope.nList = obj['nList'];
     });
 
     for (var day in enDay) {

@@ -37,7 +37,7 @@
           <img class="img-rounded media-object toon-thumb" src="{{ data['thumbUrl'] }}" alt="{{ data['title'] }}">
         </a>
         <div class="toon-info media-body">
-          <a class="toon-title" href="#">
+          <a href="#" class="toon-title">
             <small class="media-heading">{{ data['title'] }}</small>
           </a>
           - 
@@ -53,7 +53,7 @@
           <span class="tag" ng-repeat="day in data['days']">
             <span>{{ day }}</span>
           </span>
-          <span class="toon-btn btn btn-xs pull-right" ng-class="subscribeData[id] ? 'btn-primary' : 'btn-default' " ng-click="changeSubscription(id)">알림 받기</span>
+          <span class="toon-btn btn btn-xs pull-right" ng-class="nList[id]['subscribe'] ? 'btn-primary' : 'btn-default' " ng-click="changeSubscription(id)">알림 받기</span>
         </div>
       </div>
     </li>
