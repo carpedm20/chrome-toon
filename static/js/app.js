@@ -63,9 +63,13 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
   $scope.daum = true;
   $scope.naver = true;
   $scope.nComicUrl = nBase + "/webtoon/detail.nhn?titleId=";
+  $scope.dComicUrl = dBase + "/webtoon/view/";
 
   $scope.openTab = function(toon) {
-    var link = $scope.nComicUrl+toon['id'];
+    if (toon['pub'] == 'naver')
+      var link = $scope.nComicUrl + toon['id'];
+    else if (toon['pub'] == 'daum')
+      var link = $scope.dComicUrl + toon['id'];
 
     var background = chrome.extension.getBackgroundPage();
     var newCount = background.newCount;
