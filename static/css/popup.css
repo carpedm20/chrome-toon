@@ -51,6 +51,9 @@ input {
 
 /* Bootstrap Fix */
 
+small { cursor: pointer !important;}
+li {cursor: pointer!important;}
+
 .list-group {
 	margin-bottom: 0px !important;
 }

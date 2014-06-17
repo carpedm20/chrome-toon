@@ -44,10 +44,17 @@
           <a ng-click="openTab(nComicUrl+id)" class="toon-title">
             <small class="media-heading">{{ data['title'] }}</small>
           </a>
-          <!--- 
-          <small class="media-heading gray">{{ data['author'] }}</small>-->
+          
+          <small class="media-heading gray" ng-if="data['title'].length + data['author'].length < 15">
+            - {{ data['author'] }}
+          </small>
+
           <div class="star">
-            <div class="pull-right"><small class="star-text">{{ data['rating'] }}</small></div>
+            <div class="pull-right">
+              <small class="star-text" ng-show="data.rating <1">
+                {{ data['rating'] }}
+              </small>
+            </div>
             <div id="star-{{id}}" class="raty" score="{{ data['rating'] }}"></div>
           </div>
         </div>
