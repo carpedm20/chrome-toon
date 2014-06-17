@@ -83,6 +83,10 @@ li {cursor: pointer!important;}
 	background: #00d700;
 }
 
+.daum {
+	background: #618ffc;
+}
+
 .toon-pub {
 	display: block;
 	position: absolute;

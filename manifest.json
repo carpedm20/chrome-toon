@@ -12,7 +12,9 @@
     "notifications",
     "http://comic.naver.com/",
     "http://m.comic.naver.com/",
-    "http://thumb.comic.naver.net/"
+    "http://thumb.comic.naver.net/",
+    "http://webtoon.daum.net/",
+    "http://i1.cartoon.daumcdn.net/"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval' http://localhost; object-src 'self'",
   "default_locale": "en",

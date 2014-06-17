@@ -1,20 +1,21 @@
-﻿'use strict';
+'use strict';
 
 var storage = chrome.storage.local;
 
 var webtoonApp = angular.module('webtoonApp', ['ngRoute']).directive('myRepeatDirective', function() {
   return function(scope, element, attrs) {
+    angular.element(element).css('color','blue');
     if (scope.$last){
-      setTimeout(function() {
-        $('.raty').raty(
-          { path: '/static/img',
-            readOnly: true,
-            score: function() {
-              return $(this).attr('score')/2;
-            }
-          });
-      },100);
-    }
+      
+      $('.raty').raty(
+        { path: '/static/img',
+          readOnly: true,
+          score: function() {
+            console.log($(this).attr('score'));
+            return $(this).attr('score')/2;
+          }
+        });
+      }
   };
 });
 
@@ -23,9 +24,6 @@ var nmBase = "http://m.comic.naver.com"
 var nURL = nBase + "/webtoon/weekday.nhn"; // http://comic.naver.com/webtoon/weekday.nhn
 var nmURL = nmBase + "/webtoon/weekday.nhn?week="; // http://m.comic.naver.com/webtoon/weekday.nhn?week=mon
 
-var dBase = "http://webtoon.daum.net";
-var dURL = dBase + "/webtoon/week";
-
 var isParsedComplete = false;
 
 var enDay=["sun","mon","tue","wed","thu","fri","sat"]
@@ -33,13 +31,6 @@ var koDay=["일","월","화","수","목","금","토"]
 
 var enToKoDay = function(day) {
   return koDay[enDay.indexOf(day)];
-}
-
-var koToEnDay = function(day) {
-  for (var i in koDay) {
-    if(day.indexOf(koDay[i]) != -1)
-      return koDay[i];
-  } 
 }
 
 var day = new Date();
@@ -58,25 +49,13 @@ webtoonApp.config(function($routeProvider) {
 webtoonApp.controller('webtoonController', function($scope, $http) {
   /* Webtoon parser */
   $scope.searchText = "";
-  $scope.toonList = [];
+  $scope.nList = [];
   $scope.loading = true;
   $scope.daum = true;
   $scope.naver = true;
   $scope.nComicUrl = nBase + "/webtoon/detail.nhn?titleId=";
 
-  $scope.openTab = function(toon) {
-    var link = $scope.nComicUrl+toon['id'];
-
-    var background = chrome.extension.getBackgroundPage();
-    var newCount = background.newCount;
-
-    if (toon['isThereNew']) {
-      newCount -= 1;
-      chrome.browserAction.setBadgeText({text: newCount+"+"});
-
-      storage.set({'toonList': $scope.toonList});
-    }
-
+  $scope.openTab = function(link) {
     chrome.tabs.create({ url: link });
   }
 
@@ -91,8 +70,8 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
   }
 
   $scope.findToon = function(id) {
-    for (var i in $scope.toonList) {
-      var toon = $scope.toonList[i];
+    for (var i in $scope.nList) {
+      var toon = nList[i];
       if (toon['id'] == id)
         return toon;
     }
@@ -101,15 +80,39 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
   }
 
   $scope.titleFilter = function(toons) {
-    alet(123);
+    var naver = $("#naver").hasClass("checked");
+    console.log("naver : " + naver);
+    var daum = $("#daum").hasClass("checked");
+    console.log("daum : " + daum);
+
+    var result = {};
+    var previousLength = $(".toon-pub").length;
+
+    angular.forEach(toons, function(value, key) {
+      var toon = $scope.findToon(key);
+
+      if (toon['title'].indexOf($scope.searchText) != -1) {
+        if(!naver) {
+          if (toon['pub']=="naver") {
+            result[key] = toon;
+          }
+        } else if (!daum) {
+          if (toon['pub']=="daum") {
+            result[key] = toon;
+          }
+        } else {
+          result[key] = toon;
+        }
+      }
+    });
+
+    return result;
   }
 
   $scope.changeSubscription = function (id) {
-    var toon = $scope.findToon(id);
-
-    toon['subscribe'] = !toon['subscribe'];
+    $scope.findToon(id)['subscribe'] = !$scope.findToon(id)['subscribe'];
     
-    storage.set({'toonList': $scope.toonList}, function() {
+    storage.set({'nList': $scope.nList}, function() {
       if (chrome.extension.lastError) {
         //alert('An error occurred: ' + chrome.extension.lastError.message);
       }
@@ -127,16 +130,21 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
         if (toon != null) {
           toon['days'].push(enToKoDay(day));
         } else {
-          $scope.toonList.push({
-            'id': id,
+          toon.push({
             'thumbUrl': img.attr('src'),
             'days': [ enToKoDay(day) ],
             'title': img.attr('alt'),
             'pub': 'naver',
-            'subscribe': false,
-            'isThereNew': false,
+            'subscribe': false
           });
         }
+      });
+
+      $("#spinner").remove();
+
+      storage.get('nList', function (obj) {
+        if (typeof obj['nList'] != 'undefined')
+          $scope.nList = obj['nList'];
       });
 
       for (var day in enDay) {
@@ -158,39 +166,6 @@ webtoonApp.controller('webtoonController', function($scope, $http) {
           $scope.refreshStar();
         });
       }
-    });
-
-    $http.get(dURL).success(function(data) {
-      $(data).find('.bg_line li a').each(function(){
-        var img = $(this).find('img');
-
-        var dayStr = $(this).parent().parent().parent().find('h3').text();
-        var day = koToEnDay(dayStr);
-        var href = $(this).attr('href');
-        var id = href.substr(href.indexOf("view/")+5);
-        var toon = $scope.findToon(id);
-
-        if (toon != null) {
-          //toon['days'].push(enToKoDay(day));
-        } else {
-          $scope.toonList.push({
-            'id': id,
-            'thumbUrl': img.attr('src'),
-            'days': [ day ],
-            'title': img.attr('alt'),
-            'pub': 'daum',
-            'subscribe': false,
-            'isThereNew': false,
-          });
-        }
-      });
-
-      $("#spinner").remove();
-
-      storage.get('toonList', function (obj) {
-        if (typeof obj['toonList'] != 'undefined')
-          $scope.toonList = obj['toonList'];
-      });
     });
   }, 1000);
 

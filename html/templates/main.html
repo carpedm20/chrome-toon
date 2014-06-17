@@ -3,7 +3,7 @@
 </div>
 
 <div id="toon-filter" class="text-center">
-  <label id="naver" class="checkbox school-from-box" ng-click="refreshBusSTop(0)" for="fromSchool">
+  <label id="naver" class="checkbox school-from-box" ng-click="refreshBusSTop(0)" for="fromSchool" ng-click="titleFilter">
     <span class="icons">
       <span class="first-icon fui-checkbox-unchecked">
       </span>
@@ -11,7 +11,7 @@
       </span>
     </span>
     <input type="checkbox" value="" id="fromSchool" data-toggle="checkbox">
-    <small>네이버만 보기</small>
+    <small>네이버 보기</small>
   </label>
 
   <label id="daum" class="checkbox school-to-box" ng-click="refreshBusSTop(1)" for="toSchool">
@@ -22,7 +22,7 @@
       </span>
     </span>
     <input type="checkbox" value="" id="toSchool" data-toggle="checkbox">
-    <small>다음만 보기</small>
+    <small>다음 보기</small>
   </label>
 </div>
 
@@ -32,37 +32,41 @@
       <img id="spinner-img" src="/static/img/loading.gif" ng-show="loading"/>
     </div>
 
-    <li class="list-group-item" ng-repeat="(id, data) in titleFilter(nList)" my-repeat-directive>
-      <div class="toon-pub pull-left naver">
+    <li class="list-group-item" ng-repeat="toon in toonList | orderBy: '-subscribe' | filter: searchText " my-repeat-directive>
+      <div class="toon-pub pull-left naver" ng-if="toon['pub'] == 'naver'"></div>
+      <div class="toon-pub pull-left daum" ng-if="toon['pub'] == 'daum'">
         
       </div>
       <div class="toon-div">
-        <a ng-click="openTab(nComicUrl+id)" class="toon-thumb-link pull-left">
-          <img class="img-rounded media-object toon-thumb" src="{{ data['thumbUrl'] }}" alt="{{ data['title'] }}">
+        <a ng-click="openTab(toon)" class="toon-thumb-link pull-left">
+          <img class="img-rounded media-object toon-thumb" src="{{ toon['thumbUrl'] }}" alt="{{ toon['title'] }}">
         </a>
         <div class="toon-info media-body">
-          <a ng-click="openTab(nComicUrl+id)" class="toon-title">
-            <small class="media-heading">{{ data['title'] }}</small>
+          <a ng-click="openTab(nComicUrl+toon['id'])" class="toon-title">
+            <small class="media-heading">{{ toon['title'] }}</small>
           </a>
           
-          <small class="media-heading gray" ng-if="data['title'].length + data['author'].length < 15">
-            - {{ data['author'] }}
+          <small class="media-heading gray" ng-if="toon['title'].length + toon['author'].length < 15">
+            - {{ toon['author'] }}
           </small>
 
           <div class="star">
             <div class="pull-right">
-              <small class="star-text" ng-show="data.rating <1">
-                {{ data['rating'] }}
+              <small class="star-text" ng-show="toon.rating <1">
+                {{ toon['rating'] }}
               </small>
             </div>
-            <div id="star-{{id}}" class="raty" score="{{ data['rating'] }}"></div>
+            <div id="star-{{toon['id']}}" class="raty" score="{{ toon['rating'] }}"></div>
           </div>
         </div>
         <div class="">
-          <span class="tag" ng-repeat="day in data['days']">
+          <span class="tag" ng-repeat="day in toon['days']">
             <span>{{ day }}</span>
           </span>
-          <span class="toon-btn btn btn-xs pull-right" ng-class="nList[id]['subscribe'] ? 'btn-primary' : 'btn-default' " ng-click="changeSubscription(id)">알림 받기</span>
+          <span class="toon-btn btn btn-xs pull-right btn-primary" ng-if="toon['subscribe'] && !toon['isThereNew']" ng-click="changeSubscription(toon['id'])">아직 안뜸</span>
+          <span class="toon-btn btn btn-xs pull-right btn-success" ng-if="toon['subscribe'] && toon['isThereNew']" ng-click="changeSubscription(toon['id'])">떳다 신작</span>
+          <span class="toon-btn btn btn-xs pull-right btn-default" ng-if="
+          !toon['subscribe']" ng-click="changeSubscription(toon['id'])">알림 받기</span>
         </div>
       </div>
     </li>
